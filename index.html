@@ -150,9 +150,22 @@
         .footer-cols { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 50px; }
         
         /* ============================================================
-           MOBILANPASSNING (NYA TILLÄGG - INGET BORTTAGET)
+           MOBILMENY TILLÄGG (UTAN ATT RÖRA RESTERANDE DESIGN)
            ============================================================ */
         
+        /* Hamburger-ikonen */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1100;
+        }
+        .menu-toggle span {
+            width: 30px; height: 3px; background: var(--primary);
+            transition: var(--transition);
+        }
+
         @media (max-width: 1024px) {
             nav { padding: 0 20px; }
             .hero-content h1 { font-size: 3.5rem; }
@@ -160,54 +173,43 @@
         }
 
         @media (max-width: 768px) {
-            /* Fixa navigation på mobil */
-            nav { height: 70px; }
-            .nav-links { 
-                position: fixed; top: 70px; left: 0; width: 100%; 
-                background: white; flex-direction: column; height: auto;
-                display: none; /* Döljs som standard, visas vid klick om man vill ha hamburger */
-                border-bottom: 3px solid var(--primary);
-                overflow-y: auto; max-height: calc(100vh - 70px);
+            .menu-toggle { display: flex; }
+            
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 85%; height: 100vh;
+                background: white; flex-direction: column; padding: 100px 30px;
+                transition: 0.5s ease-in-out; box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+                overflow-y: auto;
             }
-            /* För att hålla menyn tillgänglig utan JS-hamburger, låter vi den synas vid hovring av nav eller liknande, 
-               men bäst är att låta den vara horisontellt scrollbar på mobil för enkelhet: */
-            .nav-links { 
-                display: flex; position: static; height: 50px; width: 100vw; 
-                overflow-x: auto; background: var(--steel); border: none;
-                position: fixed; top: 70px; left: 0; z-index: 999;
+            .nav-links.active { right: 0; }
+            
+            .nav-item { height: auto; width: 100%; flex-direction: column; align-items: flex-start; margin-bottom: 15px; }
+            .nav-btn { height: 50px; padding: 0; font-size: 1.1rem; width: 100%; text-align: left; }
+            
+            /* Visa dropdowns på mobil när man klickar/hovrar */
+            .dropdown { 
+                position: static; opacity: 1; visibility: visible; 
+                transform: none; box-shadow: none; padding: 10px 0 10px 20px;
+                display: none; border-bottom: none; border-left: 2px solid var(--accent);
             }
-            .nav-btn { padding: 0 15px; white-space: nowrap; font-size: 0.7rem; }
-            .dropdown { display: none !important; } /* Dropdowns är svåra på mobil utan klick-event */
+            .nav-item:hover .dropdown { display: block; }
 
-            /* Hero anpassning */
             .hero-content { padding-left: 5%; padding-right: 5%; text-align: center; }
             .hero-content h1 { font-size: 2.5rem; }
-            .hero-content div { flex-direction: column; gap: 10px !important; }
-
-            /* Tvinga alla grids till en kolumn */
+            
+            /* Grids till en kolumn */
             .container > div[style*="grid-template-columns"],
             section[style*="grid-template-columns"],
             div[style*="grid-template-columns"] { 
-                grid-template-columns: 1fr !important; 
-                gap: 40px !important; 
+                grid-template-columns: 1fr !important; gap: 40px !important; 
             }
 
-            /* Fixa fasta höjder */
-            .img-stack { height: 300px; margin-bottom: 20px; }
-            .img-main { width: 100%; height: 250px; position: relative; }
-            .img-sub { display: none; } /* Döljer bara det undre lagret för läsbarhet */
+            .img-stack { height: 300px; }
+            .img-main { width: 100%; position: relative; }
+            .img-sub { display: none; }
 
-            /* Stats */
             .stats-grid { grid-template-columns: 1fr 1fr !important; }
-            .stat-num { font-size: 2rem; }
-
-            /* Footer */
-            footer { padding: 40px 20px; }
-            .footer-cols { grid-template-columns: 1fr !important; gap: 30px; }
-
-            /* Justera stora rubriker i sektioner */
-            h2[style*="font-size: 4rem"] { font-size: 2.2rem !important; }
-            h3[style*="font-size: 3rem"] { font-size: 1.8rem !important; }
+            .footer-cols { grid-template-columns: 1fr !important; }
         }
     </style>
 </head>
@@ -218,38 +220,42 @@
             <i class="fa-solid fa-faucet-drip"></i> DIN<span>VVS-FIRMA</span>
         </a>
 
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span><span></span><span></span>
+        </div>
+
         <div class="nav-links">
-            <div class="nav-item"><button class="nav-btn" onclick="showPage('home')">Start</button></div>
+            <div class="nav-item"><button class="nav-btn" onclick="showPage('home'); closeMenu()">Start</button></div>
             
             <div class="nav-item">
                 <button class="nav-btn">Tjänster & Produkter ▾</button>
                 <ul class="dropdown">
-                    <li class="dropdown-item"><button onclick="showPage('prod-1')">Värmepumpar & Energi</button></li>
-                    <li class="dropdown-item"><button onclick="showPage('prod-2')">Badrumsrenovering</button></li>
-                    <li class="dropdown-item"><button onclick="showPage('prod-3')">Golvvärmesystem</button></li>
-                    <li class="dropdown-item"><button onclick="showPage('prod-4')">Stambyten & Relining</button></li>
-                    <li class="dropdown-item"><button onclick="showPage('prod-5')">Vattenrening & Filter</button></li>
-                    <li class="dropdown-item"><button onclick="showPage('prod-6')">Pannbyten (Pellets/El)</button></li>
-                    <li class="dropdown-item"><button onclick="showPage('prod-7')">Industriell Rördragning</button></li>
-                    <li class="dropdown-item"><button onclick="showPage('prod-8')">Kyl- & AC-installation</button></li>
-                    <li class="dropdown-item"><button onclick="showPage('prod-9')">Smart Home</button></li>
-                    <li class="dropdown-item"><button onclick="showPage('prod-10')">Jour & Serviceavtal</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('prod-1'); closeMenu()">Värmepumpar & Energi</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('prod-2'); closeMenu()">Badrumsrenovering</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('prod-3'); closeMenu()">Golvvärmesystem</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('prod-4'); closeMenu()">Stambyten & Relining</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('prod-5'); closeMenu()">Vattenrening & Filter</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('prod-6'); closeMenu()">Pannbyten (Pellets/El)</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('prod-7'); closeMenu()">Industriell Rördragning</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('prod-8'); closeMenu()">Kyl- & AC-installation</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('prod-9'); closeMenu()">Smart Home</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('prod-10'); closeMenu()">Jour & Serviceavtal</button></li>
                 </ul>
             </div>
 
             <div class="nav-item">
                 <button class="nav-btn">Om Oss ▾</button>
                 <ul class="dropdown">
-                    <li class="dropdown-item"><button onclick="showPage('om-historia')">Vår Historia</button></li>
-                    <li class="dropdown-item"><button onclick="showPage('om-miljo')">Miljöpolicy</button></li>
-                    <li class="dropdown-item"><button onclick="showPage('om-certifikat')">Certifieringar</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('om-historia'); closeMenu()">Vår Historia</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('om-miljo'); closeMenu()">Miljöpolicy</button></li>
+                    <li class="dropdown-item"><button onclick="showPage('om-certifikat'); closeMenu()">Certifieringar</button></li>
                 </ul>
             </div>
 
-            <div class="nav-item"><button class="nav-btn" onclick="showPage('hitta-hit')">Hitta hit</button></div>
+            <div class="nav-item"><button class="nav-btn" onclick="showPage('hitta-hit'); closeMenu()">Hitta hit</button></div>
 
-            <div class="nav-item" style="margin-left: 20px;">
-                <button class="cta-main" onclick="showPage('kontakt')" style="padding: 12px 25px; font-size: 0.7rem;">Få Offert</button>
+            <div class="nav-item" id="mobile-cta-wrapper">
+                <button class="cta-main" onclick="showPage('kontakt'); closeMenu()" style="padding: 12px 25px; font-size: 0.7rem;">Få Offert</button>
             </div>
         </div>
     </nav>
@@ -360,7 +366,7 @@
                     <p style="font-size: 1.1rem; margin-bottom: 30px;">Sveavägen 10, Stockholm</p>
                 </div>
                 <div style="border-radius: 20px; overflow: hidden; height: 300px; box-shadow: var(--shadow); background: #eee;">
-                    <iframe width="100%" height="100%" frameborder="0" src="https://maps.google.com/maps?q=Sveav%C3%A4gen%2010,Stockholm&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+                    <iframe width="100%" height="100%" frameborder="0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2034.9048384917412!2d18.064917416072483!3d59.33385731764614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x465f9d6061389895%3A0x6a190209dfa99676!2sSveav%C3%A4gen%2010%2C%20111%2057%20Stockholm!5e0!3m2!1ssv!2sse!4v1700000000000!5m2!1ssv!2sse"></iframe>
                 </div>
             </div>
         </div>
@@ -406,6 +412,7 @@
     </footer>
 
     <script>
+        // Logik för att byta sida
         function showPage(pageId) {
             const sections = document.querySelectorAll('.page-section');
             sections.forEach(sec => sec.classList.remove('active'));
@@ -416,6 +423,19 @@
             }
         }
 
+        // --- MOBILMENY LOGIK ---
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        function closeMenu() {
+            navLinks.classList.remove('active');
+        }
+
+        // Animation vid scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
