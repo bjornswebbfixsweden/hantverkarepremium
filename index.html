@@ -376,14 +376,7 @@
             .stats-grid { grid-template-columns: 1fr 1fr; }
         }
 
-        @media (max-width: 768px) {
-            nav { padding: 0 20px; }
-            .hero-content h1 { font-size: 2.5rem; }
-            .page-header { font-size: 2.5rem; }
-            .content-grid { grid-template-columns: 1fr; }
-            .footer-cols { grid-template-columns: 1fr; }
-        }
-/* Denna kod krymper modalen och fixar knappen */
+        /* Denna kod krymper modalen och fixar knappen */
 #offerModal .modal-content {
     margin: 10px auto;      /* Flyttar upp boxen närmare toppen */
     padding: 15px 25px;     /* Minskar tomrummet inuti boxen */
@@ -403,6 +396,80 @@
 #offerModal input, #offerModal select, #offerModal textarea {
     padding: 8px;           /* Gör rutorna man skriver i lägre */
 }
+/* --- MOBILANPASSNING START --- */
+@media (max-width: 768px) {
+    /* 1. Fixa Navigationen - låt den växa och stapla knappar vid behov */
+    nav {
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+        position: static; /* Tar bort 'fixed' på mobilen för att undvika att den täcker innehåll */
+    }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        gap: 5px;
+        margin-top: 15px;
+    }
+
+    .nav-item {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-btn {
+        width: 100%;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .dropdown {
+        position: static;
+        width: 100%;
+        box-shadow: none;
+        display: none; /* Döljer dropdowns på mobilen för att spara plats */
+    }
+
+    /* 2. Fixa Grid-systemet - gör alla 2-kolumns-layouter till 1 kolumn */
+    .content-grid, 
+    .footer-cols {
+        grid-template-columns: 1fr !important;
+        gap: 30px;
+    }
+
+    /* 3. Justera Rubriker och Text */
+    .page-header {
+        font-size: 2.2rem !important;
+        line-height: 1.2;
+    }
+
+    h1 {
+        font-size: 2.5rem !important;
+    }
+
+    .container {
+        padding: 40px 15px; /* Mindre luft på sidorna för att ge plats åt texten */
+    }
+
+    .page-section {
+        padding-top: 20px; /* Eftersom nav inte längre är fixed behövs mindre padding-top */
+    }
+
+    /* 4. Fixa bilder och kartor */
+    #hitta-hit iframe {
+        height: 300px; /* Gör kartan lite lägre på mobilen */
+    }
+
+    /* 5. Knappar */
+    .cta-main {
+        width: 100%;
+        text-align: center;
+        clip-path: none !important; /* Tar bort den sneda designen på mobilen för bättre läsbarhet */
+        border-radius: 5px;
+    }
+}
+/* --- MOBILANPASSNING SLUT --- */
     </style>
 </head>
 <body>
@@ -725,12 +792,7 @@
                         <p><strong>Öppettider Kontor:</strong> Måndag - Fredag: 07:00 - 16:30</p>
                         <p><strong>Hämta materiel:</strong> Vardagar från 06:30 för våra montörer</p>
                     </div>
-                    <div style="margin-top: 30px; display: flex; gap: 20px;">
-                        <i class="fa-brands fa-square-facebook" style="font-size: 2rem; color: var(--primary);"></i>
-                        <i class="fa-brands fa-linkedin" style="font-size: 2rem; color: var(--primary);"></i>
-                        <i class="fa-brands fa-instagram" style="font-size: 2rem; color: var(--primary);"></i>
-                    </div>
-                </div>
+                                    </div>
                 <div style="width: 100%; height: 450px; border-radius: 20px; overflow: hidden; border: 5px solid white; box-shadow: var(--shadow);">
                     <iframe 
     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2131.6045353556!2d11.9705!3d57.7088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x464ff363914902d9%3A0x6734139d48624f8d!2zR8dGVib3JncyBjZW50cmFsc3RhdGlvbg!5e0!3m2!1ssv!2sse!4v17000000000002" 
